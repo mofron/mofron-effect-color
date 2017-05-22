@@ -26,10 +26,18 @@ mofron.effect.Color = class extends mofron.Effect {
     enable (tgt) {
         try {
             let chg_clr = this.color()[1];
+            if ((null === chg_clr) && (null !== this.themeIdx())) {
+                chg_clr = tgt.theme().color(this.themeIdx());
+            }
+            
             if (null !== chg_clr) {
-                tgt.style({
-                    background : chg_clr.getStyle()
-                });
+                if ('function' === typeof tgt['color']) {
+                    tgt.color(chg_clr);
+                } else {
+                    tgt.style({
+                        background : chg_clr.getStyle()
+                    });
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -41,9 +49,13 @@ mofron.effect.Color = class extends mofron.Effect {
         try {
             let rep_clr = this.color()[0];
             if (null !== rep_clr) {
-                tgt.style({
-                    background : rep_clr.getStyle()
-                });
+                if ('function' === typeof tgt['color']) {
+                    tgt.color(rep_clr);
+                } else {
+                    tgt.style({
+                        background : rep_clr.getStyle()
+                    });
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -71,6 +83,23 @@ mofron.effect.Color = class extends mofron.Effect {
             if (undefined !== to) {
                 this.m_color[1] = to;
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    themeIdx (idx) {
+        try {
+            if (undefined === idx) {
+                /* getter */
+                return (undefined === this.m_thmidx) ? null : this.m_thmidx;
+            }
+            /* setter */
+            if ('number' !== typeof idx) {
+                throw new Error('invalid parameter');
+            }
+            this.m_thmidx = idx;
         } catch (e) {
             console.error(e.stack);
             throw e;
