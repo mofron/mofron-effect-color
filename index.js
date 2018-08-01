@@ -9,14 +9,12 @@
  */
 mofron.effect.Color = class extends mofron.Effect {
     
-    constructor (po_clr1, clr2) {
+    constructor (po, p2) {
         try {
             super();
             this.name('Color');
-            this.prmOpt(
-                (true === mofron.func.isInclude(po_clr1, 'Color')) ?
-                    { color : new mofron.Param(po_clr1, clr2) } : po_clr1
-            );
+            this.prmMap('frmColor', 'toColor');
+            this.prmOpt(po, p2);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -25,20 +23,7 @@ mofron.effect.Color = class extends mofron.Effect {
     
     enable (tgt) {
         try {
-            let chg_clr = this.color()[1];
-            if ((null === chg_clr) && (null !== this.themeIdx())) {
-                chg_clr = tgt.theme().color(this.themeIdx());
-            }
-            
-            if (null !== chg_clr) {
-                if ('function' === typeof tgt['color']) {
-                    tgt.color(chg_clr);
-                } else {
-                    tgt.style({
-                        background : chg_clr.getStyle()
-                    });
-                }
-            }
+            tgt.color(this.color()[1]);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -47,64 +32,62 @@ mofron.effect.Color = class extends mofron.Effect {
     
     disable (tgt) {
         try {
-            let rep_clr = this.color()[0];
-            if (null !== rep_clr) {
-                if ('function' === typeof tgt['color']) {
-                    tgt.color(rep_clr);
-                } else {
-                    tgt.style({
-                        background : rep_clr.getStyle()
-                    });
-                }
-            }
+            tgt.color(this.color()[0]);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    color (from, to) {
+    color (frm, to) {
         try {
-            if (undefined === from) {
+            if (undefined === frm) {
                 /* getter */
-                return (undefined === this.m_color) ? [null,null] : this.m_color;
+                return [this.frmColor(), this.toColor()];
             }
             /* setter */
-            if (undefined === this.m_color) {
-                this.m_color = new Array(null,null)
-            }
-            if ( ((undefined !== from) && (false === mofron.func.isInclude(from, 'Color'))) ||
-                 ((undefined !== to)   && (false === mofron.func.isInclude(to, 'Color')))  ) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined !== from) {
-                this.m_color[0] = from;
-            }
-            if (undefined !== to) {
-                this.m_color[1] = to;
-            }
+            this.frmColor(frm);
+            this.toColor(to);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    themeIdx (idx) {
+    frmColor (prm) {
         try {
-            if (undefined === idx) {
+            if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_thmidx) ? null : this.m_thmidx;
+                return (undefined === this.m_frmclr) ? new mofron.Color(255,255,255) : this.m_frmclr;
             }
             /* setter */
-            if ('number' !== typeof idx) {
+            if (true !== mofron.func.isInclude(prm, 'Color')) {
                 throw new Error('invalid parameter');
             }
-            this.m_thmidx = idx;
+            this.m_frmclr = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
+    
+    toColor (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_toclr) ? new mofron.Color(255,255,255) : this.m_toclr;
+            }
+            /* setter */
+            if (true !== mofron.func.isInclude(prm, 'Color')) {
+                throw new Error('invalid parameter');
+            }
+            this.m_toclr = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
 }
-mofron.effect.color = {};
 module.exports = mofron.effect.Color;
+/* end of file */
