@@ -2,18 +2,18 @@
  * @file mofron-effect-color/index.js
  * @author simpart
  */
-
+const mf = require('mofron');
 /**
  * @class mofron.effect.Color
  * @brief color effect class
  */
-mofron.effect.Color = class extends mofron.Effect {
+mf.effect.Color = class extends mf.Effect {
     
     constructor (po, p2) {
         try {
             super();
             this.name('Color');
-            this.prmMap('frmColor', 'toColor');
+            this.prmMap('color');
             this.prmOpt(po, p2);
         } catch (e) {
             console.error(e.stack);
@@ -21,73 +21,49 @@ mofron.effect.Color = class extends mofron.Effect {
         }
     }
     
+    /**
+     * change enable color
+     *
+     * @note private method
+     */
     enable (tgt) {
-        try {
-            tgt.color(this.color()[1]);
-        } catch (e) {
+        try { tgt.color(this.color()[0]); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
+    /**
+     * change disable color
+     *
+     * @note private method
+     */
     disable (tgt) {
-        try {
-            tgt.color(this.color()[0]);
-        } catch (e) {
+        try { tgt.color(this.color()[1]); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    color (frm, to) {
+    /**
+     * enable,disable color setter/getter
+     *
+     * @param p1 (string) enable color (css color value)
+     * @param p1 (undefined) call as getter
+     * @param p2 (string) disable color (css color value)
+     * @return (string) color (css color value)
+     */
+    color (en, dis) {
         try {
-            if (undefined === frm) {
-                /* getter */
-                return [this.frmColor(), this.toColor()];
+            if (undefined !== en) {
+                mf.func.getColor(en);
             }
-            /* setter */
-            this.frmColor(frm);
-            this.toColor(to);
+            return this.execConfig('color', en, dis);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
-    
-    frmColor (prm) {
-        try {
-            if (undefined === prm) {
-                /* getter */
-                return (undefined === this.m_frmclr) ? new mofron.Color(255,255,255) : this.m_frmclr;
-            }
-            /* setter */
-            if (true !== mofron.func.isInclude(prm, 'Color')) {
-                throw new Error('invalid parameter');
-            }
-            this.m_frmclr = prm;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    toColor (prm) {
-        try {
-            if (undefined === prm) {
-                /* getter */
-                return (undefined === this.m_toclr) ? new mofron.Color(255,255,255) : this.m_toclr;
-            }
-            /* setter */
-            if (true !== mofron.func.isInclude(prm, 'Color')) {
-                throw new Error('invalid parameter');
-            }
-            this.m_toclr = prm;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
 }
-module.exports = mofron.effect.Color;
+module.exports = mf.effect.Color;
 /* end of file */
