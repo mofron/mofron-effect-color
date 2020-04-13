@@ -1,0 +1,10 @@
+<require>
+    <tag load="mofron-comp-frame">Frame</tag>
+    <tag load="mofron-effect-color">Color</tag>
+</require>
+
+<Frame>
+    <effect>
+        <Color delay=1000 speed=1000>[255,230,230]</Color>
+    </effect>
+</Frame>

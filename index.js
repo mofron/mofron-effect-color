@@ -1,20 +1,30 @@
 /**
  * @file mofron-effect-color/index.js
- * @author simpart
+ * @brief color effect for mofron
+ * @license MIT
  */
-const mf = require('mofron');
-/**
- * @class mofron.effect.Color
- * @brief color effect class
- */
-mf.effect.Color = class extends mf.Effect {
-    
-    constructor (po, p2) {
+
+module.exports = class extends mofron.class.Effect {
+    /**
+     * initialize effect
+     * 
+     * @param (mixed) color parameter
+     *                dict: effect config
+     * @short color
+     * @type private
+     */
+    constructor (prm) {
         try {
             super();
             this.name('Color');
-            this.prmMap('color');
-            this.prmOpt(po, p2);
+            this.shortForm('color');
+            /* init config */
+            this.confmng().add("type", { type: "string", select: ["main", "base", "accent"], init: "main" });
+            this.confmng().add("color", { type: "color" });
+	    /* set config */
+	    if (undefined !== prm) {
+                this.config(prm);
+	    }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -22,48 +32,50 @@ mf.effect.Color = class extends mf.Effect {
     }
     
     /**
-     * change enable color
-     *
-     * @note private method
+     * effet contents
+     * 
+     * @param (mofron.class.Component) effect target component
+     * @type private
      */
-    enable (tgt) {
-        try { tgt.color(this.color()[0]); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * change disable color
-     *
-     * @note private method
-     */
-    disable (tgt) {
-        try { tgt.color(this.color()[1]); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * enable,disable color setter/getter
-     *
-     * @param p1 (string) enable color (css color value)
-     * @param p1 (undefined) call as getter
-     * @param p2 (string) disable color (css color value)
-     * @return (string) color (css color value)
-     */
-    color (en, dis) {
+    contents (cmp) {
         try {
-            if (undefined !== en) {
-                mf.func.getColor(en);
-            }
-            return this.execConfig('color', en, dis);
-        } catch (e) {
+            cmp[this.type() + "Color"](this.color());
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+	}
+    }
+    
+    /**
+     * target color type setter/getter
+     * 
+     * @param (string) color type ['main'/'base'/'accent']
+     * @return (string) color type
+     * @type parameter
+     */
+    type (prm) {
+        try {
+            return this.confmng("type", prm);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+	}
+    }
+    
+    /**
+     * effect color setter/getter
+     * 
+     * @param (mixed(color)) effect color
+     * @return (string) color of style value
+     * @type parameter
+     */
+    color (prm) {
+        try {
+            return this.confmng("color", prm);
+	} catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-module.exports = mf.effect.Color;
 /* end of file */
