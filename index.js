@@ -16,11 +16,13 @@ module.exports = class extends mofron.class.Effect {
     constructor (prm) {
         try {
             super();
-            this.name('Color');
+            this.modname('Color');
             this.shortForm('color');
+            this.transition(["background","color"]);
+
             /* init config */
             this.confmng().add("type", { type: "string", select: ["main", "base", "accent"], init: "main" });
-            this.confmng().add("color", { type: "color" });
+            this.confmng().add("color", { type: "color", init:undefined });
 	    /* set config */
 	    if (undefined !== prm) {
                 this.config(prm);
